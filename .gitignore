@@ -1,0 +1,23 @@
+# Système
+.DS_Store
+._*
+Thumbs.db
+
+# Éditeurs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Dépendances et journaux
+node_modules/
+*.log
+
+# Secrets : jamais dans Git
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Claude Code (réglages locaux)
+.claude/settings.local.json
