@@ -25,7 +25,7 @@ Conventions communes à tous les dépôts de l'organisation `itnetgg-web-factory
 
 - Fusion par **squash** uniquement : un commit par sujet sur `main`.
 - Titre de PR = futur message de commit.
-- Les contrôles automatiques doivent être au vert avant fusion (workflows ajoutés au bloc 2 de la Phase 0).
+- Les contrôles automatiques doivent être au vert avant fusion : « controles / Format (editorconfig) » et « controles / Secrets (gitleaks) », plus les contrôles propres à la filière.
 
 ## Messages de commit
 

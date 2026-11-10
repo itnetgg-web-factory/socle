@@ -1,0 +1,61 @@
+# Contrôles communs à tous les dépôts de l'usine.
+# Appel depuis un autre dépôt :
+#   jobs:
+#     controles:
+#       uses: itnetgg-web-factory/socle/.github/workflows/controles.yml@v0.1.0
+#
+# Les outils sont téléchargés à une version fixe et vérifiés par empreinte SHA-256.
+
+name: Contrôles communs
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    name: Format (editorconfig)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Installer editorconfig-checker
+        env:
+          EC_VERSION: v4.0.2
+          EC_SHA256: 44efaef3ed14c6ab52eb87481d78e5e5c204796dccf26e2f4598a61ba17f8003
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/ec.tar.gz" \
+            "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/${EC_VERSION}/editorconfig-checker-linux-amd64.tar.gz"
+          echo "${EC_SHA256}  $RUNNER_TEMP/ec.tar.gz" | sha256sum -c -
+          tar xzf "$RUNNER_TEMP/ec.tar.gz" -C "$RUNNER_TEMP" editorconfig-checker
+
+      - name: Vérifier le format des fichiers
+        run: '"$RUNNER_TEMP/editorconfig-checker"'
+
+  secrets:
+    name: Secrets (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Installer gitleaks
+        env:
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum -c -
+          tar xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+
+      - name: Rechercher des secrets dans tout l'historique
+        run: '"$RUNNER_TEMP/gitleaks" git --redact --no-banner --verbose .'
