@@ -16,24 +16,28 @@ description: Créer ou faire évoluer un site de la filière B de l'usine itnetg
 ```
 src/components/   composants .astro réutilisables, paramétrés par props
 src/layouts/      BaseLayout (en-tête, pied de page, métadonnées SEO)
-src/content/      contenus éditables (pages, services, témoignages), schémas validés
+src/content/      contenus éditables (YAML, Markdown), voir docs/contenus.md
+src/schemas/      schémas Zod des contenus, testés par npm test
 src/pages/        routes
-public/admin/     Decap CMS
+public/admin/     Decap CMS, voir docs/decap.md
+worker/           authentification GitHub de Decap (routes /oauth/*)
 ```
 
 ## Règles de réalisation
 
 - **Contenu hors des composants** : tout texte, image ou tarif modifiable par le client vient de `src/content/` et figure dans la configuration Decap. Aucun contenu client codé en dur.
 - **Statique par défaut** ; JavaScript client uniquement pour un composant interactif, avec la directive `client:*` la plus sobre (`client:visible` plutôt que `client:load`).
-- **Schémas stricts** dans la configuration des collections : un champ manquant ou mal formé doit faire échouer le build.
+- **Schémas stricts** dans `src/schemas/contenus.ts` : un champ manquant ou mal formé doit faire échouer le build. Tout champ ajouté ou modifié l'est **à la fois** dans le schéma, dans `public/admin/config.yml`, dans `docs/contenus.md` et dans les tests.
+- **Images des contenus** dans `src/assets/images/`, référencées par l'alias `@assets/images/…`.
+- **Decap** : authentification par une GitHub App propre au site (voir `docs/decap.md`), flux éditorial obligatoire. Adapter `backend.repo` dans `config.yml` pour chaque client.
 - **Images** : composant `Image` d'Astro, formats modernes, dimensions et `alt` obligatoires.
 - **Accessibilité et SEO** : appliquer `socle/standards/accessibility.md` et `seo.md` dès la création du composant, pas en fin de projet.
 
 ## Vérifier avant de proposer la fusion
 
-1. `npm ci` puis `npm run build` sans erreur ni avertissement de schéma.
+1. `npm ci` puis `npm run verify` (types, tests des schémas, build) sans erreur ni avertissement.
 2. Rendu vérifié dans le navigateur (`npm run preview`) : mobile et bureau.
-3. Pour une modification de contenu ou de CMS : simuler l'édition dans `/admin` et vérifier le commit produit.
+3. Pour une modification de contenu ou de CMS : simuler l'édition dans `/admin` (`npm run dev` + `npm run cms:local`) et vérifier le fichier produit.
 4. Pull request avec résumé, captures si le rendu change, contrôles CI au vert.
 
 ## Déploiement
