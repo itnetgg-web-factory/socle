@@ -36,7 +36,9 @@
 
 - En-têtes de sécurité définis : `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`.
 - Interface `/admin` de Decap protégée par une authentification GitHub opérationnelle ; une page `/admin` publique sans authentification est interdite.
-- Le client n'a accès qu'au CMS, pas au dépôt ni au compte Cloudflare, sauf demande explicite.
+- Accès du client pour l'édition (Decap CMS, backend GitHub) : un compte GitHub **nominatif**, avec double authentification, invité en écriture sur **le seul dépôt de son site**. Aucun accès à l'organisation ni au compte Cloudflare, sauf demande explicite.
+- Authentification de Decap par une **GitHub App** propre au site, installée sur ce seul dépôt, permissions *Contents* et *Pull requests* uniquement, jetons à expiration activée. Pas d'application OAuth classique (portée `repo` sur tous les dépôts de l'éditeur).
+- Publication par le flux éditorial de Decap : chaque modification passe par une pull request validée par la CI avant d'arriver sur `main`.
 
 ## Données personnelles
 
