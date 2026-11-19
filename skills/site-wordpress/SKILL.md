@@ -36,7 +36,8 @@ description: Créer ou faire évoluer un site de la filière A de l'usine itnetg
 
 ## Déploiement
 
-- GitHub Actions en SSH/SFTP, uniquement les dossiers de code maison ; identifiants dans les secrets GitHub.
+- GitHub Actions, uniquement les dossiers de code maison ; identifiants dans les secrets GitHub (environnement limité à `main`). Chez o2switch, SSH est fermé aux runners GitHub : FTPS avec un compte FTP limité à `wp-content` (voir `starter-wordpress/docs/deploiement.md`).
+- Après un déploiement, vérifier qu'une page modifiée par le client est restée identique (test de survie des contenus).
 - Sauvegarde fichiers + base avant toute mise en production.
 - Production : suivre `site-delivery`.
 

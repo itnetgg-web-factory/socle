@@ -24,7 +24,7 @@ Limite de l'offre GitHub Free : secrets d'environnement et validation manuelle n
 
 ## Filière A : WordPress
 
-- Déployer uniquement le thème, les extensions et les mu-plugins maison (SSH/SFTP via GitHub Actions).
+- Déployer uniquement le thème, les extensions et les mu-plugins maison, par GitHub Actions. Transport : SSH/SFTP si l'hébergeur l'ouvre aux runners GitHub ; sinon FTPS (certificat vérifié) avec un compte FTP limité au dossier `wp-content`, comme chez o2switch où SSH est filtré par adresse IP. Envoi par fichier provisoire puis renommage, pour qu'aucun fichier ne manque pendant le déploiement. Détails : `starter-wordpress/docs/deploiement.md`.
 - Ne jamais toucher à `uploads/`, à la base ni aux extensions installées par le client.
 - Sauvegarde fichiers + base **avant** chaque mise en production.
 - Retour arrière : redéployer le tag précédent ; restaurer la base seulement si une migration l'exige.
