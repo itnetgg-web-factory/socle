@@ -49,7 +49,7 @@ Restaurer d'abord les **fichiers** du dossier du site, puis la **base**, à part
 
 1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers** (ou **de bases de données**).
 2. Sur la sauvegarde voulue, lancer le téléchargement. JetBackup prépare l'archive en arrière-plan : la tâche apparaît dans la **file d'attente** avec les colonnes *Type* (« Téléchargement »), *Informations* (compte, priorité), *Créée*, *Propriétaire*, *Délai d'exécution* (durée totale et temps réel) et *Statut*. Attendre le statut **Terminé**, puis récupérer l'archive.
-   Ordre de grandeur mesuré : environ **17 minutes** pour un compte d'un peu moins de 1 Go. Ne pas fermer l'onglet inutilement : la tâche continue sans lui, mais le lien n'est proposé qu'à la fin.
+    Ordre de grandeur mesuré : environ **17 minutes** pour un compte d'un peu moins de 1 Go. Ne pas fermer l'onglet inutilement : la tâche continue sans lui, mais le lien n'est proposé qu'à la fin.
 3. Ranger l'archive hors de l'hébergeur, dans un emplacement chiffré. Les archives ne vont jamais dans Git.
 4. Vérifier que l'archive s'ouvre et contient le dossier du site (fichiers) ou un fichier `.sql` (base).
 
