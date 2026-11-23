@@ -12,6 +12,16 @@ Statut des étapes : **testé** (réalisé avec succès), **à tester** (libell�
 - L'outil « WP Tiger » sauvegarde **tout le site** : il convient pour une copie complète, pas pour récupérer un seul fichier.
 - Une restauration est toujours **ciblée** : on coche ce qu'on veut restaurer. Restaurer le compte entier écrase tout ce qui a changé depuis la sauvegarde.
 
+## Vérifier que les sauvegardes quotidiennes tournent
+
+Ne pas supposer que la sauvegarde existe : lire la date de la dernière sauvegarde quotidienne dans JetBackup. Constaté lors d'un contrôle : les sauvegardes quotidiennes s'étaient arrêtées 41 jours plus tôt sans aucun signalement, et les anciennes restaient affichées.
+
+| Quand | Quoi |
+|---|---|
+| Chaque semaine, et avant toute opération risquée | Date de la dernière sauvegarde quotidienne : elle doit dater de moins de 48 heures |
+| Date trop ancienne | Ouvrir un ticket au support de l'hébergeur (compte, dates, demande d'une sauvegarde immédiate et de la cause) |
+| En attendant | Faire une copie maison : export de la base (`wp db export`) et archive de `wp-content`, rangées hors de l'hébergeur |
+
 ## Choisir la bonne méthode
 
 | Besoin | Méthode |
@@ -23,7 +33,7 @@ Statut des étapes : **testé** (réalisé avec succès), **à tester** (libell�
 | Site entier inutilisable | **Restaurer le site entier**, en dernier recours |
 | Copie de précaution | **Télécharger une sauvegarde** |
 
-## Restaurer un fichier *(testé)*
+## Restaurer un fichier *(à tester)*
 
 1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers**.
 2. Choisir la sauvegarde la plus récente d'avant l'incident.
@@ -32,7 +42,7 @@ Statut des étapes : **testé** (réalisé avec succès), **à tester** (libell�
 5. Suivre la tâche dans la **file d'attente** (*Queue*) jusqu'à son terme.
 6. Vérifier : le fichier est revenu (même taille, même date) et la page qui l'utilise s'affiche.
 
-Piège constaté lors du test : une restauration lancée sans passer par l'étape 3 a remis **tout le site** à l'état de la sauvegarde, pas seulement le fichier visé ; voir « Après une restauration ».
+Piège constaté lors d'un premier essai : une restauration a remis **tout le site** à l'état d'une sauvegarde, pas seulement le fichier visé. L'outil utilisé (JetBackup ou WP Tiger, qui restaure un site entier) n'a pas pu être identifié : la restauration ciblée d'un seul fichier avec JetBackup reste à vérifier. Voir « Après une restauration ».
 
 ## Restaurer la base de données *(à tester)*
 
