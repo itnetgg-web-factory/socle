@@ -12,6 +12,16 @@ Statut des étapes : **testé** (réalisé avec succès), **à tester** (libell�
 - L'outil « WP Tiger » sauvegarde **tout le site** : il convient pour une copie complète, pas pour récupérer un seul fichier.
 - Une restauration est toujours **ciblée** : on coche ce qu'on veut restaurer. Restaurer le compte entier écrase tout ce qui a changé depuis la sauvegarde.
 
+## Vérifier que les sauvegardes quotidiennes tournent
+
+Ne pas supposer que la sauvegarde existe : lire la date de la dernière sauvegarde quotidienne dans JetBackup. Constaté lors d'un contrôle : les sauvegardes quotidiennes s'étaient arrêtées 41 jours plus tôt sans aucun signalement, et les anciennes restaient affichées.
+
+| Quand | Quoi |
+|---|---|
+| Chaque semaine, et avant toute opération risquée | Date de la dernière sauvegarde quotidienne : elle doit dater de moins de 48 heures |
+| Date trop ancienne | Ouvrir un ticket au support de l'hébergeur (compte, dates, demande d'une sauvegarde immédiate et de la cause) |
+| En attendant | Faire une copie maison : export de la base (`wp db export`) et archive de `wp-content`, rangées hors de l'hébergeur |
+
 ## Choisir la bonne méthode
 
 | Besoin | Méthode |
@@ -23,7 +33,7 @@ Statut des étapes : **testé** (réalisé avec succès), **à tester** (libell�
 | Site entier inutilisable | **Restaurer le site entier**, en dernier recours |
 | Copie de précaution | **Télécharger une sauvegarde** |
 
-## Restaurer un fichier *(testé)*
+## Restaurer un fichier *(à tester)*
 
 1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers**.
 2. Choisir la sauvegarde la plus récente d'avant l'incident.
@@ -32,7 +42,7 @@ Statut des étapes : **testé** (réalisé avec succès), **à tester** (libell�
 5. Suivre la tâche dans la **file d'attente** (*Queue*) jusqu'à son terme.
 6. Vérifier : le fichier est revenu (même taille, même date) et la page qui l'utilise s'affiche.
 
-Piège constaté lors du test : une restauration lancée sans passer par l'étape 3 a remis **tout le site** à l'état de la sauvegarde, pas seulement le fichier visé ; voir « Après une restauration ».
+Piège constaté lors d'un premier essai : une restauration a remis **tout le site** à l'état d'une sauvegarde, pas seulement le fichier visé. L'outil utilisé (JetBackup ou WP Tiger, qui restaure un site entier) n'a pas pu être identifié : la restauration ciblée d'un seul fichier avec JetBackup reste à vérifier. Voir « Après une restauration ».
 
 ## Restaurer la base de données *(à tester)*
 
@@ -47,12 +57,19 @@ Restaurer d'abord les **fichiers** du dossier du site, puis la **base**, à part
 
 ## Télécharger une sauvegarde *(testé)*
 
-1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers** (ou **de bases de données**).
+Chaque type d'élément se télécharge **séparément** : dossier d'accueil, bases de données, e-mails, tâches cron, etc. L'archive du dossier d'accueil ne contient **pas** les bases : il faut aussi télécharger celles du site.
+
+1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers** (ou **de bases de données**). **Lire la date** de la ligne choisie et prendre la plus récente : une liste peut proposer des sauvegardes de plusieurs semaines, et un téléchargement lancé sur la mauvaise ligne donne une archive ancienne qui ne contient pas les derniers sites.
 2. Sur la sauvegarde voulue, lancer le téléchargement. JetBackup prépare l'archive en arrière-plan : la tâche apparaît dans la **file d'attente** avec les colonnes *Type* (« Téléchargement »), *Informations* (compte, priorité), *Créée*, *Propriétaire*, *Délai d'exécution* (durée totale et temps réel) et *Statut*. Attendre le statut **Terminé**, puis récupérer l'archive.
     Ordre de grandeur mesuré : environ **17 minutes** pour un compte d'un peu moins de 1 Go. Ne pas fermer l'onglet inutilement : la tâche continue sans lui, mais le lien n'est proposé qu'à la fin.
 3. Ranger l'archive hors de l'hébergeur, dans un emplacement chiffré. Les archives ne vont jamais dans Git.
-4. Vérifier que l'archive s'ouvre et contient le dossier du site (fichiers) ou un fichier `.sql` (base).
+4. **Contrôler l'archive avant de la ranger**, sans l'extraire : `tar -tzf <archive> | grep -m1 '<dossier-du-site>/'` doit afficher une ligne ; `tar -tzvf <archive> | tail -3` donne la date des fichiers les plus récents. Une archive qui ne contient pas le site attendu n'est pas une sauvegarde de ce site.
+5. Une archive de compte contient des données sensibles (clés, certificats, `wp-config.php`, historique de commandes) : la ranger chiffrée, hors de tout dossier suivi par Git, et supprimer les copies intermédiaires.
 
+
+## Copie complète d'un site WordPress avec WP Tiger *(testé)*
+
+L'outil d'o2switch produit une archive unique du site : fichiers WordPress, `wp-config.php` et un export `.sql` de la base. Elle convient pour une copie de précaution d'un seul site. Elle ne remplace pas JetBackup, qui sauvegarde chaque jour et permet de restaurer un seul fichier.
 
 ## Après une restauration
 
