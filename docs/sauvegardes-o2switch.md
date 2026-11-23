@@ -47,12 +47,19 @@ Restaurer d'abord les **fichiers** du dossier du site, puis la **base**, à part
 
 ## Télécharger une sauvegarde *(testé)*
 
-1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers** (ou **de bases de données**).
+Chaque type d'élément se télécharge **séparément** : dossier d'accueil, bases de données, e-mails, tâches cron, etc. L'archive du dossier d'accueil ne contient **pas** les bases : il faut aussi télécharger celles du site.
+
+1. cPanel › **JetBackup 5** › **Sauvegardes de fichiers** (ou **de bases de données**). **Lire la date** de la ligne choisie et prendre la plus récente : une liste peut proposer des sauvegardes de plusieurs semaines, et un téléchargement lancé sur la mauvaise ligne donne une archive ancienne qui ne contient pas les derniers sites.
 2. Sur la sauvegarde voulue, lancer le téléchargement. JetBackup prépare l'archive en arrière-plan : la tâche apparaît dans la **file d'attente** avec les colonnes *Type* (« Téléchargement »), *Informations* (compte, priorité), *Créée*, *Propriétaire*, *Délai d'exécution* (durée totale et temps réel) et *Statut*. Attendre le statut **Terminé**, puis récupérer l'archive.
     Ordre de grandeur mesuré : environ **17 minutes** pour un compte d'un peu moins de 1 Go. Ne pas fermer l'onglet inutilement : la tâche continue sans lui, mais le lien n'est proposé qu'à la fin.
 3. Ranger l'archive hors de l'hébergeur, dans un emplacement chiffré. Les archives ne vont jamais dans Git.
-4. Vérifier que l'archive s'ouvre et contient le dossier du site (fichiers) ou un fichier `.sql` (base).
+4. **Contrôler l'archive avant de la ranger**, sans l'extraire : `tar -tzf <archive> | grep -m1 '<dossier-du-site>/'` doit afficher une ligne ; `tar -tzvf <archive> | tail -3` donne la date des fichiers les plus récents. Une archive qui ne contient pas le site attendu n'est pas une sauvegarde de ce site.
+5. Une archive de compte contient des données sensibles (clés, certificats, `wp-config.php`, historique de commandes) : la ranger chiffrée, hors de tout dossier suivi par Git, et supprimer les copies intermédiaires.
 
+
+## Copie complète d'un site WordPress avec WP Tiger *(testé)*
+
+L'outil d'o2switch produit une archive unique du site : fichiers WordPress, `wp-config.php` et un export `.sql` de la base. Elle convient pour une copie de précaution d'un seul site. Elle ne remplace pas JetBackup, qui sauvegarde chaque jour et permet de restaurer un seul fichier.
 
 ## Après une restauration
 
