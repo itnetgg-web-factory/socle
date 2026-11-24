@@ -5,7 +5,7 @@ description: Préparer et vérifier la mise en production ou la remise au client
 
 # Livraison d'un site
 
-Référence : `socle/standards/delivery.md`. Une livraison est **vérifiable, réversible et documentée**. Claude Code prépare et vérifie ; **Gérard valide** chaque mise en production.
+Référence : `socle/standards/delivery.md`. Procédures pas à pas : `socle/docs/livraison-wordpress.md` et `socle/docs/livraison-astro.md`. Une livraison est **vérifiable, réversible et documentée**. Claude Code prépare et vérifie ; **Gérard valide** chaque mise en production.
 
 ## 1. Préparer
 

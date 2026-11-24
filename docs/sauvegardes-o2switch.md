@@ -22,6 +22,49 @@ Ne pas supposer que la sauvegarde existe : lire la date de la dernière sauvegar
 | Date trop ancienne | Ouvrir un ticket au support de l'hébergeur (compte, dates, demande d'une sauvegarde immédiate et de la cause) |
 | En attendant | Faire une copie maison : export de la base (`wp db export`) et archive de `wp-content`, rangées hors de l'hébergeur |
 
+## Copie maison automatisée *(testé)*
+
+Les sauvegardes de l'hébergeur ne suffisent pas (voir ci-dessus). Le script [`scripts/sauvegarder-wordpress.sh`](../scripts/sauvegarder-wordpress.sh) fait une copie indépendante par SSH, en lecture seule côté serveur : rien n'est écrit sur l'hébergement.
+
+```bash
+# Sauvegarde : export de la base (wp db export), archive du dossier du site, empreintes SHA-256
+scripts/sauvegarder-wordpress.sh sauvegarder <alias-ssh> <dossier-du-site-sur-le-serveur> <dossier-local> --chiffrer-pour <identifiant-gpg>
+
+# Contrôle de fraîcheur : échoue si la dernière sauvegarde a plus de 36 heures
+scripts/sauvegarder-wordpress.sh verifier <dossier-local>
+```
+
+Ce que le script contrôle avant de déclarer la sauvegarde terminée : export de la base lisible et terminé (« Dump completed »), archive lisible, `wp-config.php` et `wp-content` présents. En cas d'échec, la sauvegarde partielle est supprimée. Les anciennes sauvegardes sont supprimées au-delà de `--conserver` (14 par défaut).
+
+Pièges et choix :
+
+- **Les archives contiennent `wp-config.php`** (identifiants de la base, clés) : toujours les chiffrer (`--chiffrer-pour`, clé publique GPG dont la clé privée reste ailleurs) ou les ranger sur un disque chiffré. Sans l'une de ces protections, le script avertit.
+- Le dossier local n'est jamais dans un dépôt Git, ni dans un dossier synchronisé non chiffré.
+- La planification (launchd sur macOS, cron ailleurs) est à installer par la personne qui possède la machine : le Mac doit être allumé à l'heure choisie. Lancer `verifier` après, pour être alerté d'une sauvegarde manquée.
+- Mesure : environ 10 secondes pour un site de 170 Mo (6 900 fichiers), archive de 56 Mo.
+
+## Restaurer depuis la copie maison
+
+### Essai de restauration en local *(testé avec Docker)*
+
+À faire à blanc, pour prouver que la copie est utilisable sans toucher à l'hébergement. Durée mesurée : quelques minutes, images Docker déjà téléchargées.
+
+1. Extraire l'archive des fichiers dans un dossier **neuf et vide** (elle contient des secrets : le supprimer après l'essai).
+2. Lancer un conteneur `mariadb` (même version que l'hébergeur), créer la base du site et importer l'export (`gunzip -c base.sql.gz | docker exec -i <conteneur> mariadb …`).
+3. Dans la **copie** de `wp-config.php` (jamais sur le serveur), remplacer `DB_HOST`, `DB_USER`, `DB_PASSWORD` par ceux du conteneur et ajouter `WP_HOME` et `WP_SITEURL` vers `http://localhost:<port>`.
+4. Lancer le conteneur `wordpress:php8.4-apache` avec le dossier extrait monté sur `/var/www/html`.
+5. Contrôler : la page d'accueil répond 200, le thème attendu est actif (version de `style.css`), les pages éditées se retrouvent à l'identique (même empreinte `md5` du contenu et même nombre de révisions qu'avant la sauvegarde), le bloc formulaire s'affiche.
+6. Supprimer conteneurs, réseau et dossier extrait.
+
+Résultat du premier essai : site complet restauré (19 tables, 25 enregistrements, thème 0.3.1, page éditée identique avec ses 11 révisions, carte ajoutée par le client présente).
+
+### Restauration réelle sur l'hébergement *(à tester)*
+
+1. **Sauvegarder l'état actuel** avec le script (même cassé, il sert de point de retour).
+2. Fichiers : remettre le contenu de l'archive dans le dossier du site (SSH, ou FTPS pour `wp-content`).
+3. Base : `wp db import` de l'export, après avoir vérifié que `DB_NAME` du `wp-config.php` en place correspond à la base visée.
+4. Vérifier selon « Après une restauration ».
+
 ## Choisir la bonne méthode
 
 | Besoin | Méthode |
@@ -75,12 +118,13 @@ L'outil d'o2switch produit une archive unique du site : fichiers WordPress, `wp-
 
 Constaté lors du test : après une restauration du site entier, l'option « ne pas indexer » était revenue à son ancien état. Vérifier systématiquement :
 
-1. Visibilité pour les moteurs de recherche (Réglages › Lecture) : activée en production, désactivée en préproduction.
-2. Version de PHP et modules (OPcache) dans le sélecteur PHP de cPanel.
-3. Extensions actives et version du thème.
-4. Dernier commit déployé : fichier `wp-content/webfactory-deploiement.txt`. Si le code restauré est plus ancien, relancer le dernier déploiement de `main` (`gh run rerun`).
-5. Comptes et mots de passe : une restauration de la base peut remettre d'anciens identifiants.
-6. Formulaire de contact : un envoi de test.
+1. Nom de la base : après la restauration du site entier, `DB_NAME` dans `wp-config.php` avait changé (`<compte>_wpNNN` devenue `<compte>_wpMMM`), signe d'une restauration dans une **nouvelle base** (outil vraisemblablement WP Tiger, non confirmé). Vérifier la base réellement utilisée ; l'ancienne reste sur le compte : ne la supprimer qu'après accord et sauvegarde.
+2. Visibilité pour les moteurs de recherche (Réglages › Lecture) : activée en production, désactivée en préproduction.
+3. Version de PHP et modules (OPcache) dans le sélecteur PHP de cPanel.
+4. Extensions actives et version du thème.
+5. Dernier commit déployé : fichier `wp-content/webfactory-deploiement.txt`. Si le code restauré est plus ancien, relancer le dernier déploiement de `main` (`gh run rerun`).
+6. Comptes et mots de passe : une restauration de la base peut remettre d'anciens identifiants.
+7. Formulaire de contact : un envoi de test.
 
 ## Rythme conseillé
 
