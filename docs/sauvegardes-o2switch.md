@@ -66,7 +66,7 @@ Durée mesurée : quelques minutes pour un site de 170 Mo. Le site est indisponi
 2. Envoyer `base.sql.gz` et `fichiers.tar.gz` dans un dossier privé du compte, **hors du site** (`mkdir -m 700 ~/restauration`), et comparer les empreintes SHA-256 avec celles du Mac.
 3. Extraire l'archive dans `~/restauration/extrait`, puis vérifier que `DB_NAME` du `wp-config.php` extrait est bien la base visée (`wp config get DB_NAME`). Sinon, s'arrêter.
 4. Fichiers : **garder le dossier racine du site** et ne remplacer que son contenu, fichiers cachés compris (`shopt -s dotglob`) : déplacer le contenu actuel vers `~/restauration/avant`, puis le contenu extrait dans le dossier du site.
-   Piège constaté : remplacer le dossier racine lui-même (`mv` du dossier extrait) rend le site inaccessible (**403** sur toutes les pages). Le dossier racine appartient au groupe `nobody`, qui permet au serveur web de le lire ; le compte ne peut pas redonner ce groupe. Remède : remettre le dossier d'origine et n'en échanger que le contenu.
+    Piège constaté : remplacer le dossier racine lui-même (`mv` du dossier extrait) rend le site inaccessible (**403** sur toutes les pages). Le dossier racine appartient au groupe `nobody`, qui permet au serveur web de le lire ; le compte ne peut pas redonner ce groupe. Remède : remettre le dossier d'origine et n'en échanger que le contenu.
 5. Base : `gunzip -c ~/restauration/base.sql.gz | wp db import -` depuis le dossier du site.
 6. Vérifier selon « Après une restauration », puis supprimer `~/restauration` (il contient `wp-config.php`) et les copies non chiffrées du Mac.
 
