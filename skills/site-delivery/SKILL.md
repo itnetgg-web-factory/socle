@@ -53,6 +53,6 @@ Présenter le résultat à Gérard sous forme de tableau : contrôle, résultat,
 
 ## Retour arrière
 
-- WordPress : redéployer le tag précédent ; restaurer la base seulement si une migration l'exige, après accord de Gérard.
-- Astro : redéployer la version Cloudflare précédente ou le commit précédent.
+- WordPress : pull request d'annulation (`git revert`), puis déploiement habituel ; restaurer la base seulement si une migration l'exige, après accord de Gérard. Voir `docs/livraison-wordpress.md`.
+- Astro : en urgence, `wrangler rollback` vers la version Cloudflare précédente, puis pull request d'annulation pour corriger `main` ; sans urgence, la pull request d'annulation suffit. Voir `docs/livraison-astro.md`.
 - Toujours consigner l'incident et la cause dans le suivi du projet.
