@@ -52,10 +52,12 @@ Puis : pages principales, formulaires et intégrations, connexion à `/admin` et
 
 | Situation | Action | Statut |
 |---|---|---|
-| Contenu ou code fautif, sans urgence | Pull request d'annulation (`git revert`), puis fusion : le site est republié | testé pour WordPress, même principe ici, **à tester** sur Astro |
-| Urgence | `npx wrangler deployments list`, puis `npx wrangler rollback <version-id> --message "Motif"`, ou tableau de bord Cloudflare : Workers › le site › Deployments › Rollback (quelques secondes) | **à tester** |
+| Contenu ou code fautif, sans urgence | Pull request d'annulation (`git revert`), puis fusion : le site est republié | **testé** |
+| Urgence | `npx wrangler deployments list`, puis `npx wrangler rollback <version-id> --message "Motif"`, ou tableau de bord Cloudflare : Workers › le site › Deployments › Rollback. Effet constaté en moins de 10 secondes | **testé** (ligne de commande) |
 
 Après un retour arrière par Cloudflare, `main` n'a pas changé : corriger `main` par une pull request d'annulation, sinon la prochaine publication du client republie la version fautive. Consigner l'incident et sa cause dans le suivi du projet.
+
+Essai complet réalisé sur le starter : version fautive publiée, retour arrière par `wrangler rollback`, puis pull request d'annulation fusionnée et publiée ; site final identique à l'état de départ. En mode non interactif, `--yes` évite la question de confirmation.
 
 ## 7. Remettre au client
 
