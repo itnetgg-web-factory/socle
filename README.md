@@ -17,6 +17,9 @@ Règle de choix : **WordPress pour la liberté éditoriale, Astro pour la simpli
 |---|---|---|
 | [`docs/conventions.md`](docs/conventions.md) | Nommage, branches, commits, versions | Fait |
 | [`docs/nouveau-projet-client.md`](docs/nouveau-projet-client.md) | Procédure de création d'un projet client | Fait (déploiement à détailler par filière) |
+| [`docs/sauvegardes-o2switch.md`](docs/sauvegardes-o2switch.md) | Sauvegardes, copie maison, restauration (JetBackup 5, WP Tiger) | Fait (restauration réelle à tester) |
+| [`scripts/sauvegarder-wordpress.sh`](scripts/sauvegarder-wordpress.sh) | Copie maison d'un site WordPress par SSH, contrôle de fraîcheur | Fait |
+| [`docs/livraison-wordpress.md`](docs/livraison-wordpress.md), [`docs/livraison-astro.md`](docs/livraison-astro.md) | Procédures de livraison et de retour arrière par filière | Fait (retour arrière Astro à tester) |
 | [`standards/`](standards/) | [Architecture](standards/architecture.md), [sécurité](standards/security.md), [accessibilité](standards/accessibility.md), [SEO](standards/seo.md), [livraison](standards/delivery.md) | Fait |
 | [`.github/workflows/controles.yml`](.github/workflows/controles.yml) | Workflow réutilisable : format (editorconfig) et détection de secrets (gitleaks) | Fait |
 | [`skills/`](skills/) | Skills Claude Code `site-astro`, `site-wordpress`, `site-delivery` | Fait |
