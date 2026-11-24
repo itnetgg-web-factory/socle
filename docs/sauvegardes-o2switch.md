@@ -58,12 +58,21 @@ Pièges et choix :
 
 Résultat du premier essai : site complet restauré (19 tables, 25 enregistrements, thème 0.3.1, page éditée identique avec ses 11 révisions, carte ajoutée par le client présente).
 
-### Restauration réelle sur l'hébergement *(à tester)*
+### Restauration réelle sur l'hébergement *(testé)*
 
-1. **Sauvegarder l'état actuel** avec le script (même cassé, il sert de point de retour).
-2. Fichiers : remettre le contenu de l'archive dans le dossier du site (SSH, ou FTPS pour `wp-content`).
-3. Base : `wp db import` de l'export, après avoir vérifié que `DB_NAME` du `wp-config.php` en place correspond à la base visée.
-4. Vérifier selon « Après une restauration ».
+Durée mesurée : quelques minutes pour un site de 170 Mo. Le site est indisponible pendant l'échange des fichiers et l'import de la base (quelques secondes).
+
+1. **Sauvegarder l'état actuel** avec le script (même cassé, il sert de point de retour), puis contrôler l'archive à restaurer.
+2. Envoyer `base.sql.gz` et `fichiers.tar.gz` dans un dossier privé du compte, **hors du site** (`mkdir -m 700 ~/restauration`), et comparer les empreintes SHA-256 avec celles du Mac.
+3. Extraire l'archive dans `~/restauration/extrait`, puis vérifier que `DB_NAME` du `wp-config.php` extrait est bien la base visée (`wp config get DB_NAME`). Sinon, s'arrêter.
+4. Fichiers : **garder le dossier racine du site** et ne remplacer que son contenu, fichiers cachés compris (`shopt -s dotglob`) : déplacer le contenu actuel vers `~/restauration/avant`, puis le contenu extrait dans le dossier du site.
+   Piège constaté : remplacer le dossier racine lui-même (`mv` du dossier extrait) rend le site inaccessible (**403** sur toutes les pages). Le dossier racine appartient au groupe `nobody`, qui permet au serveur web de le lire ; le compte ne peut pas redonner ce groupe. Remède : remettre le dossier d'origine et n'en échanger que le contenu.
+5. Base : `gunzip -c ~/restauration/base.sql.gz | wp db import -` depuis le dossier du site.
+6. Vérifier selon « Après une restauration », puis supprimer `~/restauration` (il contient `wp-config.php`) et les copies non chiffrées du Mac.
+
+Le fichier `error_log` n'est pas dans la copie (exclu volontairement) : il manque après restauration, sans conséquence.
+
+Résultat de l'essai : un brouillon et un fichier témoins posés après la sauvegarde ont disparu ; base, page éditée (même empreinte, 11 révisions), thème, extensions, 39 images, formulaire, visibilité pour les moteurs et témoin de déploiement identiques à l'état sauvegardé ; connexion Novamira intacte.
 
 ## Choisir la bonne méthode
 
