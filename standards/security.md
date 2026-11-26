@@ -27,7 +27,8 @@
 
 - Cœur, thème et extensions à jour ; extensions inactives supprimées.
 - Version de PHP supportée (8.3 ou plus récente).
-- Novamira et toute passerelle IA (MCP) **interdits sur un site client en production** : ils donnent un contrôle complet du site.
+- Aucune passerelle IA (Novamira, MCP) **installée sur un WordPress client**, préproduction comprise : elle ouvrirait sur le site public une API d'administration complète. Les interventions passent par WP-CLI en SSH.
+- Accès SSH : une clé par compte d'hébergement client, protégée par une phrase de passe ; adresses IP autorisées limitées (cPanel chez o2switch) ; aucune clé SSH dans GitHub (déploiement en FTPS).
 - Pas d'éditeur de fichiers dans l'administration (`DISALLOW_FILE_EDIT`).
 - Sauvegardes fichiers + base automatiques, avec une copie hors de l'hébergeur.
 - Comptes administrateurs limités au strict nécessaire ; le client reçoit un rôle adapté à ses besoins.
