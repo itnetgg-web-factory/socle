@@ -33,11 +33,29 @@ Les dépôts clients sont **privés**, et l'organisation est sur l'offre **GitHu
 
 | Réglage | Dépôt client privé, offre Team |
 |---|---|
-| `main` | Protégée : pull request obligatoire, contrôles au vert, ni force push ni suppression |
+| `main` | Protégée : pull request obligatoire, contrôles au vert, règles appliquées aux administrateurs, ni force push ni suppression. Filière Astro : branche à jour **non** exigée, pour que les brouillons Decap se publient l'un après l'autre (décision du 26/11/2026). Filière WordPress : branche à jour exigée |
 | Environnements | `staging` et `production`, déploiement limité à `main`, secrets **d'environnement** |
 | Validation avant production | Par la fusion de la pull request dans `main` (Gérard). La validation manuelle d'environnement (« required reviewers ») n'existe pas sur un dépôt privé en Team. |
 | Accès du client, filière Astro (Decap) | Collaborateur externe, en écriture sur ce seul dépôt : **un siège Team par personne**, refacturé au client |
 | Accès du client, filière WordPress | Aucun accès GitHub : le client modifie son site dans WordPress |
+
+Protection de `main`, une fois la première CI passée (les noms des contrôles doivent exister) :
+
+```bash
+# Filière Astro : strict=false. Filière WordPress : strict=true et seulement les deux contrôles communs.
+gh api -X PUT repos/itnetgg-web-factory/client-<slug>/branches/main/protection --input - <<'JSON'
+{
+  "required_status_checks": {"strict": false, "contexts": [
+    "controles / Format (editorconfig)", "controles / Secrets (gitleaks)", "Build (astro check + build)"]},
+  "enforce_admins": true,
+  "required_pull_request_reviews": {"required_approving_review_count": 0, "dismiss_stale_reviews": true},
+  "required_conversation_resolution": true,
+  "restrictions": null,
+  "allow_force_pushes": false,
+  "allow_deletions": false
+}
+JSON
+```
 
 Aucun secret dans Git : voir [`standards/security.md`](../standards/security.md).
 
