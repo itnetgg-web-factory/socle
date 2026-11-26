@@ -27,14 +27,19 @@ Noter dans le `README.md` du projet : client, filière, version du modèle utili
 
 Le modèle contient déjà `.github/workflows/ci.yml`, qui appelle les contrôles communs de `socle` (format et détection de secrets). Vérifier que la première exécution passe au vert.
 
-## 4. Environnements et secrets
+## 4. Protection, environnements et secrets
 
-| Offre GitHub | Dépôt client privé |
+Les dépôts clients sont **privés**, et l'organisation est sur l'offre **GitHub Team** (décision du 26/11/2026). L'organisation passe en Team avant la création du premier dépôt client : c'est Gérard qui s'en occupe, en facturation mensuelle.
+
+| Réglage | Dépôt client privé, offre Team |
 |---|---|
-| Free | Pas de protection de `main`, pas d'environnements protégés : secrets **de dépôt**, validation faite dans la pull request |
-| Team | Protection de `main`, environnements `staging` et `production` avec validation manuelle |
+| `main` | Protégée : pull request obligatoire, contrôles au vert, ni force push ni suppression |
+| Environnements | `staging` et `production`, déploiement limité à `main`, secrets **d'environnement** |
+| Validation avant production | Par la fusion de la pull request dans `main` (Gérard). La validation manuelle d'environnement (« required reviewers ») n'existe pas sur un dépôt privé en Team. |
+| Accès du client, filière Astro (Decap) | Collaborateur externe, en écriture sur ce seul dépôt : **un siège Team par personne**, refacturé au client |
+| Accès du client, filière WordPress | Aucun accès GitHub : le client modifie son site dans WordPress |
 
-Le choix de l'offre est à trancher avant le premier client. Dans tous les cas : aucun secret dans Git, voir [`standards/security.md`](../standards/security.md).
+Aucun secret dans Git : voir [`standards/security.md`](../standards/security.md).
 
 ## 5. Comptes du client
 

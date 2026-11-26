@@ -18,9 +18,9 @@ Aucune mise en production sans préproduction vérifiée, sauf correctif urgent 
 | Environnement | Déclenchement | Protection |
 |---|---|---|
 | `staging` | Pull request ou branche | Aucune |
-| `production` | `main` uniquement | Validation manuelle de Gérard |
+| `production` | `main` uniquement | Validation de Gérard par la fusion de la pull request |
 
-Limite de l'offre GitHub Free : secrets d'environnement et validation manuelle ne fonctionnent que sur les **dépôts publics**. Pour un dépôt client privé sans offre Team, utiliser des secrets de dépôt et faire la validation dans la pull request.
+Dépôts clients privés en **GitHub Team** (décision du 26/11/2026). Sur un dépôt privé, Team permet la protection de branche, les secrets d'environnement et la restriction des déploiements à `main`. En revanche, la validation manuelle d'environnement (« required reviewers ») reste réservée aux dépôts publics et à Enterprise : la validation humaine se fait donc à la fusion de la pull request. L'offre Free n'est pas utilisée pour un dépôt client privé, car elle n'y offre ni protection de `main` ni secrets d'environnement.
 
 ## Filière A : WordPress
 
