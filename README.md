@@ -6,7 +6,7 @@ L'usine produit des sites selon deux filières, avec une seule méthode de trava
 
 | Filière | Pile technique | Modèle |
 |---|---|---|
-| A | WordPress + Gutenberg + Novamira, hébergement o2switch | [`starter-wordpress`](https://github.com/itnetgg-web-factory/starter-wordpress) |
+| A | WordPress + Gutenberg, hébergement o2switch | [`starter-wordpress`](https://github.com/itnetgg-web-factory/starter-wordpress) |
 | B | Astro + Decap CMS + Cloudflare Workers | [`starter-astro`](https://github.com/itnetgg-web-factory/starter-astro) |
 
 Règle de choix : **WordPress pour la liberté éditoriale, Astro pour la simplicité opérationnelle et la performance.**

@@ -30,7 +30,7 @@ La décision est prise par Gérard et notée dans le `README.md` du projet.
 | Versionné | Thème, extensions et mu-plugins développés pour le site |
 | Hors Git | Cœur WordPress, `wp-config.php`, base, médias, extensions installées par le client |
 | Éditeur | Gutenberg + blocs personnalisés |
-| IA | Novamira en développement et préproduction uniquement |
+| Accès de Claude Code | WP-CLI par SSH ; aucune passerelle IA installée dans WordPress |
 | Données | Types de contenu, taxonomies et champs natifs, ou extension de modélisation si elle est déjà présente |
 
 ## Filière B : Astro
