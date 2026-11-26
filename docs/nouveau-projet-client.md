@@ -63,7 +63,7 @@ Aucun secret dans Git : voir [`standards/security.md`](../standards/security.md)
 
 - **Domaine** : reste au nom du client.
 - **Cloudflare** (filière B, et DNS éventuellement pour la filière A) : compte ouvert au nom du client, Gérard invité comme collaborateur.
-- **Hébergement WordPress** (filière A) : compte au nom du client ; préproduction sur o2switch.
+- **Hébergement WordPress** (filière A) : compte au nom du client. La préproduction est **chez cet hébergeur**, sur un sous-domaine avec sa propre base, construite par la procédure maison en WP-CLI. Jamais sur le compte principal de l'usine, et jamais avec la préproduction de WP Tiger (son bouton « Mettre en ligne » remplace tout le site de production). Décision du 26/11/2026.
 - Authentification à deux facteurs activée partout.
 
 ## 6. Réaliser
