@@ -41,6 +41,7 @@ Pièges et choix :
 - **Les archives contiennent `wp-config.php`** (identifiants de la base, clés) : toujours les chiffrer (`--chiffrer-pour`, clé publique GPG dont la clé privée reste ailleurs) ou les ranger sur un disque chiffré. Sans l'une de ces protections, le script avertit.
 - Le dossier local n'est jamais dans un dépôt Git, ni dans un dossier synchronisé non chiffré.
 - La planification (launchd sur macOS, cron ailleurs) est à installer par la personne qui possède la machine : le Mac doit être allumé à l'heure choisie. Lancer `verifier` après, pour être alerté d'une sauvegarde manquée.
+- **Le réseau peut manquer au réveil de la machine** (constaté le 26/11/2026 à 03:30 : nom du serveur non résolu, copie du jour perdue). La tâche planifiée attend donc que le serveur SSH soit joignable (par exemple `nc -z -G 5 <serveur> 22` toutes les 15 s, 5 min au plus), puis retente `sauvegarder` jusqu'à trois fois, à 10 min d'intervalle, avant de signaler l'échec. Une copie interrompue ne laisse pas de dossier partiel.
 - Mesure : environ 10 secondes pour un site de 170 Mo (6 900 fichiers), archive de 56 Mo.
 
 ## Restaurer depuis la copie maison
