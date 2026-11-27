@@ -49,3 +49,7 @@ Les vérifications « controles / Format (editorconfig) » et « controles / Sec
 - Aucun secret dans Git : les secrets vivent dans les paramètres GitHub (dépôt ou environnement) ou chez l'hébergeur.
 - Toute modification de `main` passe par une pull request.
 - Chaque client garde son domaine et ses comptes d'hébergement ; Gérard y accède comme collaborateur.
+
+## Licence
+
+Code sous licence MIT : voir [`LICENSE`](LICENSE).
